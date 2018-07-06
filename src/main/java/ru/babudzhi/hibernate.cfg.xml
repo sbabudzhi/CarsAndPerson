@@ -1,0 +1,31 @@
+<?xml version = "1.0" encoding = "utf-8"?>
+<hibernate-configuration>
+    <session-factory>
+
+        <property name = "hibernate.dialect">
+            org.hibernate.dialect.MySQLDialect
+        </property>
+
+        <property name = "hibernate.connection.driver_class">
+            org.h2.Driver
+        </property>
+
+        <!-- Assume test is the database name -->
+
+        <property name = "hibernate.connection.url">
+            jdbc:h2:tcp://localhost/~/test
+        </property>
+
+        <property name = "hibernate.connection.username">
+            sa
+        </property>
+
+        <property name = "hibernate.connection.password">
+
+             DB schema will be updated if needed
+             <property name="hbm2ddl.auto">update</property>
+
+        </property>
+    </session-factory>
+</hibernate-configuration>
+
