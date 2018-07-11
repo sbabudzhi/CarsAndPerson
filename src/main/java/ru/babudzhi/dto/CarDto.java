@@ -3,24 +3,24 @@ package ru.babudzhi.dto;
 public class CarDto {
 
     private Long id = null;
-    private String model;
-    private int horsePower;
-    private Long owner;
+    private String model = "";
+    private Integer horsepower = null;
+    private Long ownerId = null;
 
     public CarDto() {
     }
 
-    public CarDto(Long id, String model, int horsePower, Long owner) {
+    public CarDto(Long id, String model, Integer horsePower, Long ownerId) {
         this.id = id;
         this.model = model;
-        this.horsePower = horsePower;
-        this.owner = owner;
+        this.horsepower = horsePower;
+        this.ownerId = ownerId;
     }
 
-    public CarDto(String model, int horsePower, Long owner) {
+    public CarDto(String model, Integer horsePower, Long ownerId) {
         this.model = model;
-        this.horsePower = horsePower;
-        this.owner = owner;
+        this.horsepower = horsePower;
+        this.ownerId = ownerId;
     }
 
     public Long getId() {
@@ -35,16 +35,16 @@ public class CarDto {
     public void setModel(String model) {
         this.model = model;
     }
-    public int getHorsePower() {
-        return horsePower;
+    public Integer getHorsepower() {
+        return horsepower;
     }
-    public void setHorsePower(int horsepower) {
-        this.horsePower = horsepower;
+    public void setHorsepower(Integer horsepower) {
+        this.horsepower = horsepower;
     }
-    public Long getOwner() {
-        return owner;
+    public Long getOwnerId() {
+        return ownerId;
     }
     public void setOwnerId(Long owner) {
-        this.owner = owner;
+        this.ownerId = owner;
     }
 }

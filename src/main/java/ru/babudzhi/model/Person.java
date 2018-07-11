@@ -9,31 +9,28 @@ import java.util.Set;
 @Table(name = "person", schema = "cars")
 public class Person {
 
-    private Long id;
-    private String name;
-    private Date birthday;
+    private Long id = null;
+    private String name = "";
+    private Date birthdate = null;
     private Set<Car> carSet = new HashSet<>();
 
-    public Person(Long id, String name, Date birthday, Set<Car> carSet) {
+    public Person(Long id, String name, Date birthdate, Set<Car> carSet) {
         this.id = id;
         this.name = name;
-        this.birthday = birthday;
+        this.birthdate = birthdate;
         this.carSet = carSet;
     }
 
-    public Person(String name, Date birthday, Set<Car> carSet) {
-        this.name = name;
-        this.birthday = birthday;
-        this.carSet = carSet;
+    public Person(Long id) {
+       this.id = id;
     }
 
     public Person() { }
 
-    public Person(Long id, String name, Date birthday) {
+    public Person(Long id, String name) {
         this.id = id;
         this.name = name;
-        this.birthday = birthday;
-    }
+        }
 
     @OneToMany(mappedBy = "owner")
     public Set<Car> getCarSet() {
@@ -44,11 +41,9 @@ public class Person {
         this.carSet = carSet;
     }
 
-
-
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "person_generator")
-    @SequenceGenerator(name="person_generator", sequenceName = " SYSTEM_SEQUENCE_1F4537B9_7184_4519_BD9A_D8745A8B4CB6")
+//    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "person_generator")
+//    @SequenceGenerator(name="person_generator", sequenceName = "person_seq", allocationSize = 0)
     @Column(name = "ID", nullable = false)
     public Long getId() {
         return id;
@@ -69,13 +64,13 @@ public class Person {
     }
 
     @Basic
-    @Column(name = "BIRTHDAY", nullable = false)
-    public Date getBirthday() {
-        return birthday;
+    @Column(name = "BIRTHDATE", nullable = false)
+    public Date getBirthdate() {
+        return birthdate;
     }
 
-    public void setBirthday(Date birthday) {
-        this.birthday = birthday;
+    public void setBirthdate(Date birthdate) {
+        this.birthdate = birthdate;
     }
 
     @Override
@@ -87,7 +82,7 @@ public class Person {
 
         if (id != person.id) return false;
         if (name != null ? !name.equals(person.name) : person.name != null) return false;
-        if (birthday != null ? !birthday.equals(person.birthday) : person.birthday != null) return false;
+        if (birthdate != null ? !birthdate.equals(person.birthdate) : person.birthdate != null) return false;
 
         return true;
     }
@@ -96,7 +91,7 @@ public class Person {
     public int hashCode() {
         int result = (int) (id ^ (id >>> 32));
         result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + (birthday != null ? birthday.hashCode() : 0);
+        result = 31 * result + (birthdate != null ? birthdate.hashCode() : 0);
         return result;
     }
 }

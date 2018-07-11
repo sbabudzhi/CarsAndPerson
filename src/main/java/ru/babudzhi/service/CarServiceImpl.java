@@ -8,8 +8,6 @@ import ru.babudzhi.model.Car;
 import ru.babudzhi.model.Person;
 
 import javax.transaction.Transactional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Service
 @Transactional
@@ -30,13 +28,23 @@ public class CarServiceImpl implements CarService {
         return null;
     }
 
+    @Override
+    public Long carCount() {
+        return carDao.carCount();
+    }
+
+    @Override
+    public Long countVendor() {
+        return carDao.countVendor();
+    }
+
     public Car getCarOfCarDto(CarDto cDto){
-        Car car =  new Car();
-        car.setModel(cDto.getModel());
-        car.setHorsePower(cDto.getHorsePower());
-        Person p = new Person();
-        p.setId(cDto.getOwner());
-        car.setOwner(p);
+
+        Car car =  new Car(cDto.getId(),cDto.getModel(),cDto.getHorsepower());
+        if(cDto.getOwnerId() != null && !cDto.getOwnerId().toString().equals(""))
+            car.setOwner(new Person(cDto.getOwnerId()));
+        else
+            car.setOwner(null);
         return car;
     }
 
@@ -44,15 +52,13 @@ public class CarServiceImpl implements CarService {
         CarDto cDto = new CarDto();
         cDto.setId(car.getId());
         cDto.setModel(car.getModel());
-        cDto.setHorsePower(car.getHorsePower());
+        cDto.setHorsepower(car.getHorsePower());
         cDto.setOwnerId(car.getOwner().getId());
         return cDto;
     }
 
+    @Override
+    public void clear(){
+        carDao.clear();
+    }
 }
-//{
-//        "model":"BMV-X5",
-//        "horsepower":200,
-//        "owner":2
-//        }
-//проверять имя пользователя на числа!

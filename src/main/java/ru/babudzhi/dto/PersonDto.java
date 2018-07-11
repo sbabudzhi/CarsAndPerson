@@ -4,16 +4,19 @@ import java.util.Set;
 
 public class PersonDto {
     private Long id = null;
-    private String name;
-    private String birthDay;
+    private String name = "";
+    private String birthdate = "";
     private Set<CarDto> carDtoSet;
 
     public PersonDto() { }
+    public PersonDto(Long id) {
+        this.id = id;
+    }
 
     public PersonDto(long id, String name, String birthday) {
         this.id = id;
         this.name = name;
-        this.birthDay = birthday;
+        this.birthdate = birthday;
     }
     public Set<CarDto> getCarDtoSet() {
         return carDtoSet;
@@ -33,10 +36,10 @@ public class PersonDto {
     public void setName(String name) {
         this.name = name;
     }
-    public String getBirthday() {
-        return birthDay;
+    public String getBirthdate() {
+        return birthdate;
     }
-    public void setBirthday(String birthday) {
-        this.birthDay = birthday;
+    public void setBirthdate(String birthday) {
+        this.birthdate = birthday;
     }
 }

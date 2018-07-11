@@ -3,9 +3,13 @@ package ru.babudzhi.dao;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import ru.babudzhi.model.Car;
 import ru.babudzhi.model.Person;
+import javax.transaction.Transactional;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Repository
 public class PersonDaoImpl implements PersonDao {
@@ -14,25 +18,70 @@ public class PersonDaoImpl implements PersonDao {
 
     @Override
     public Person addPerson(Person person) {
-
-        List<Long> personIdList = sessionFactory.getCurrentSession().createQuery("select id from Person").getResultList();
-        for (Long anPersonIdList : personIdList) {   //объект с таким id еще не добавлялся
-            if (anPersonIdList == person.getId() && anPersonIdList != null)
-                return null;
+        if(validRequestData(person)) {
+            List<Long> personIdList = sessionFactory.getCurrentSession().createQuery("select id from Person").getResultList();
+            for (Long anPersonIdList : personIdList) {   //объект с таким id еще не добавлялся
+                if (anPersonIdList == person.getId() && anPersonIdList != null)
+                    return null;
+            }
+            if (person.getBirthdate().before(new Date()) //дата в прошлом
+                    && person.getBirthdate().getClass() == Date.class && person.getName().getClass() == String.class) { // все поля соответствуют заявленным типам
+                this.sessionFactory.getCurrentSession().persist(person);
+                return sessionFactory.getCurrentSession().load(Person.class, person.getId());
+            }
         }
-         if (person.getBirthday().before(new Date()) //дата в прошлом
-                && person.getBirthday().getClass()== Date.class && person.getName().getClass() == String.class){ // все поля соответствуют заявленным типам
-            this.sessionFactory.getCurrentSession().persist(person);
-            return sessionFactory.getCurrentSession().load(Person.class,person.getId());
-        }
-        else   return null;
+        return null;
     }
 
     @Override
-    public Person getPersonWithCars(long id) {
-        Person p = sessionFactory.getCurrentSession().load(Person.class,id);
-        if(p.getId() == id) {
-            return p;
-        } else return null;
+    public Person getPersonWithCars(Long id) {
+        if(id != null) {
+            Person p = sessionFactory.getCurrentSession().get(Person.class, id);
+            if (p != null) {
+                Set<Car> carSet = getCarSet(p.getId());
+                if (p.getId().equals(id)) {
+                    p.setCarSet(carSet);
+                    return p;
+                } else
+                    return null;
+            } else return p;
+        }
+        return null;
+    }
+
+    @Override
+    public Long personCount() {
+        List<Long> listId = sessionFactory.getCurrentSession().createQuery("select id from Person").getResultList();
+        Long count = Long.valueOf(0);
+        for (Long aLong : listId) {
+            count++;
+        }
+        return count;
+    }
+
+    public Set<Car> getCarSet(Long personId){
+        Set<Car> carSet = new HashSet<>();
+        List<Car> list = sessionFactory.getCurrentSession().createQuery("from Car where owner.id = :id").setParameter("id", personId).getResultList();
+        for (Car car : list) {
+            carSet.add(car);
+        }
+        return carSet;
+    }
+    public boolean validRequestData(Person person){
+        if(person.getId()!= null
+                && !person.getId().toString().equals("")
+                &&  person.getName() != null
+                && !person.getName().equals("")
+                &&  person.getBirthdate() != null
+                && !person.getBirthdate().toString().equals("")) {
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    @Transactional
+    public void clear(){
+         sessionFactory.getCurrentSession().createQuery("delete from Person").executeUpdate();
     }
 }

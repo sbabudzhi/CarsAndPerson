@@ -3,24 +3,24 @@ package ru.babudzhi.model;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "CAR")
+@Table(name = "car" ,schema = "cars")
 public class Car {
-    private Long id;
-    private String model;
-    private int horsePower;
+    private Long id = null;
+    private String model = "";
+    private Integer horsePower = null;
     private Person owner;
 
     public Car() {
     }
 
-    public Car(Long id, String model, int horsePower, Person owner) {
+    public Car(Long id, String model, Integer horsePower) {
         this.id = id;
         this.model = model;
         this.horsePower = horsePower;
         this.owner = owner;
     }
 
-    public Car(String model, int horsePower, Person owner) {
+    public Car(String model, Integer horsePower, Person owner) {
         this.model = model;
         this.horsePower = horsePower;
         this.owner = owner;
@@ -28,8 +28,8 @@ public class Car {
 
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "person_generator")
-    @SequenceGenerator(name="person_generator", sequenceName = " SYSTEM_SEQUENCE_1F4537B9_7184_4519_BD9A_D8745A8B4CB6")
+//    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "car_generator")
+//    @SequenceGenerator(name="car_generator", sequenceName = "car_seq", allocationSize = 0)
     @Column(name = "ID", nullable = false)
     public Long getId() {
         return id;
@@ -51,11 +51,11 @@ public class Car {
 
     @Basic
     @Column(name = "HORSEPOWER", nullable = false)
-    public int getHorsePower() {
+    public Integer getHorsePower() {
         return horsePower;
     }
 
-    public void setHorsePower(int horsepower) {
+    public void setHorsePower(Integer horsepower) {
         this.horsePower = horsepower;
     }
 
