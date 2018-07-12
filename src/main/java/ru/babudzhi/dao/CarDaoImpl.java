@@ -8,6 +8,7 @@ import ru.babudzhi.model.Person;
 import javax.transaction.Transactional;
 import java.time.Period;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -40,14 +41,20 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public Long countVendor() {
-        List<String> listId = sessionFactory.getCurrentSession().createQuery("select model from Car GROUP BY model").getResultList();
-        Long count = Long.valueOf(0);
-        for (String aLong : listId) {
-            count++;
+        List<String> listModel = sessionFactory.getCurrentSession().createQuery("select model from Car GROUP BY model").getResultList();
+        List<String> listUniqueVendor = new ArrayList<>();
+        for (String aLong : listModel) {
+            String vendor = aLong.split("-")[0];
+            int i =0;
+            for (String s : listUniqueVendor) {
+                if(s.toUpperCase().equals(vendor.toUpperCase()))
+                    i++;
+            }
+            if(i == 0)
+                listUniqueVendor.add(vendor);
         }
-        return count;
+        return (long) listUniqueVendor.size();
     }
-
 
     private boolean carNotExist(Long id){
         List<Long> carIdList = sessionFactory.getCurrentSession().createQuery("select id from Car where id=:id").setParameter("id",id).getResultList();
@@ -81,7 +88,7 @@ public class CarDaoImpl implements CarDao {
     }
 
     private String correctNameModel(String nameModel){
-        Pattern pattern = Pattern.compile("^\\w+-\\w+$"); // буквы и цифры_ любое количество раз, кроме нуля-буквы и цифры_ люое количество раз кроме нуля
+        Pattern pattern = Pattern.compile("^\\w+-\\S+"); // буквы и цифры_ любое количество раз, кроме нуля-буквы и цифры_ люое количество раз кроме нуля
         Matcher model = pattern.matcher(nameModel);
         if (model.find()) { //если подобная конструкция найдена
             return model.group();
