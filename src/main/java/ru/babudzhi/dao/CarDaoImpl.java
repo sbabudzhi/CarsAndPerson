@@ -49,25 +49,20 @@ public class CarDaoImpl implements CarDao {
     }
 
 
-    public boolean carNotExist(Long id){
-        List<Long> carIdList = sessionFactory.getCurrentSession().createQuery("select id from Car").getResultList();
-        for (Long anCarIdList : carIdList) {            //объект с таким id еще не добавлялся
-            if (anCarIdList == id && anCarIdList != null)
-                return false;
-        }
-        return true;
-    }
-
-    public boolean personExist(Long idPerson){
-        Person p = new Person();
-        if(idPerson != null)
-            p = sessionFactory.getCurrentSession().get(Person.class,idPerson);
-        if(p == null)
+    private boolean carNotExist(Long id){
+        List<Long> carIdList = sessionFactory.getCurrentSession().createQuery("select id from Car where id=:id").setParameter("id",id).getResultList();
+        if(carIdList.size() != 0)
                 return false;
         return true;
     }
 
-    public boolean validRequest( Car car){
+    private boolean personExist(Long idPerson){
+        if(idPerson!= null && sessionFactory.getCurrentSession().get(Person.class,idPerson) == null)
+                return false;
+        return true;
+    }
+
+    private boolean validRequest(Car car){
         if(car.getId()!= null
                 &&!car.getId().toString().equals("")
                 && car.getModel() != null
@@ -76,24 +71,31 @@ public class CarDaoImpl implements CarDao {
                 && car.getHorsePower() > 0
                 && car.getOwner() != null
                 && personExist(car.getOwner().getId())) {
-
             car.setOwner(sessionFactory.getCurrentSession().load(Person.class, car.getOwner().getId()));
-            int agePersonCorrect = Period.between(car.getOwner().getBirthdate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),  //возраст владельца
-                    new Date().toInstant().atZone(ZoneId.systemDefault()).toLocalDate())
-                    .getYears();
-            if(agePersonCorrect< 18)// // Person младше 18 лет
-                return false;
-
-            Pattern pattern = Pattern.compile("^\\w+-\\w+$"); // буквы и цифры_ любое количество раз, кроме нуля-буквы и цифры_ люое количество раз кроме нуля
-            Matcher model = pattern.matcher(car.getModel());
-            if (model.find()) { //если подобная конструкция найдена
-                String modelCar = model.group();
-                car.setModel(modelCar);
+            if (correctNameModel(car.getModel()) != null && correctAgePerson(car.getOwner().getBirthdate())) {
+                car.setModel(correctNameModel(car.getModel()));
                 return true;
-            }else
-                return false;
-        }else
-            return false;
+            }
+        }
+        return false;
+    }
+
+    private String correctNameModel(String nameModel){
+        Pattern pattern = Pattern.compile("^\\w+-\\w+$"); // буквы и цифры_ любое количество раз, кроме нуля-буквы и цифры_ люое количество раз кроме нуля
+        Matcher model = pattern.matcher(nameModel);
+        if (model.find()) { //если подобная конструкция найдена
+            return model.group();
+        }
+        return null;
+    }
+
+    private boolean correctAgePerson(Date birthdate){
+        int agePersonCorrect = Period.between(birthdate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),  //возраст владельца
+                new Date().toInstant().atZone(ZoneId.systemDefault()).toLocalDate())
+                .getYears();
+        if(agePersonCorrect >= 18)// // Person младше 18 лет
+            return true;
+        else return false;
     }
 
     @Override

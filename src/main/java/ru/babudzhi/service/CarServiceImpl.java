@@ -24,11 +24,6 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
-    public CarDto getCarDtoById(Long id) {
-        return null;
-    }
-
-    @Override
     public Long carCount() {
         return carDao.carCount();
     }
@@ -43,8 +38,6 @@ public class CarServiceImpl implements CarService {
         Car car =  new Car(cDto.getId(),cDto.getModel(),cDto.getHorsepower());
         if(cDto.getOwnerId() != null && !cDto.getOwnerId().toString().equals(""))
             car.setOwner(new Person(cDto.getOwnerId()));
-        else
-            car.setOwner(null);
         return car;
     }
 

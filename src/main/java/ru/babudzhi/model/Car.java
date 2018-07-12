@@ -8,7 +8,7 @@ public class Car {
     private Long id = null;
     private String model = "";
     private Integer horsePower = null;
-    private Person owner;
+    private Person owner = null;
 
     public Car() {
     }

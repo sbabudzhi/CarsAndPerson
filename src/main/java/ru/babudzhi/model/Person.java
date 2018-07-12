@@ -10,7 +10,7 @@ import java.util.Set;
 public class Person {
 
     private Long id = null;
-    private String name = "";
+    private String name = null;
     private Date birthdate = null;
     private Set<Car> carSet = new HashSet<>();
 

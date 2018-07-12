@@ -4,8 +4,8 @@ import java.util.Set;
 
 public class PersonDto {
     private Long id = null;
-    private String name = "";
-    private String birthdate = "";
+    private String name = null;
+    private String birthdate = null;
     private Set<CarDto> carDtoSet;
 
     public PersonDto() { }

@@ -19,13 +19,11 @@ public class PersonDaoImpl implements PersonDao {
     @Override
     public Person addPerson(Person person) {
         if(validRequestData(person)) {
-            List<Long> personIdList = sessionFactory.getCurrentSession().createQuery("select id from Person").getResultList();
-            for (Long anPersonIdList : personIdList) {   //объект с таким id еще не добавлялся
-                if (anPersonIdList == person.getId() && anPersonIdList != null)
+            List<Long> personIdList = sessionFactory.getCurrentSession().createQuery("select id from Person where id=:id").setParameter("id",person.getId()).getResultList();
+            if(personIdList.size()!=0)
                     return null;
-            }
-            if (person.getBirthdate().before(new Date()) //дата в прошлом
-                    && person.getBirthdate().getClass() == Date.class && person.getName().getClass() == String.class) { // все поля соответствуют заявленным типам
+
+            if (person.getBirthdate().before(new Date())) { // дата в прошлом
                 this.sessionFactory.getCurrentSession().persist(person);
                 return sessionFactory.getCurrentSession().load(Person.class, person.getId());
             }
@@ -42,9 +40,8 @@ public class PersonDaoImpl implements PersonDao {
                 if (p.getId().equals(id)) {
                     p.setCarSet(carSet);
                     return p;
-                } else
-                    return null;
-            } else return p;
+                }
+            }
         }
         return null;
     }
@@ -59,7 +56,7 @@ public class PersonDaoImpl implements PersonDao {
         return count;
     }
 
-    public Set<Car> getCarSet(Long personId){
+    private Set<Car> getCarSet(Long personId){
         Set<Car> carSet = new HashSet<>();
         List<Car> list = sessionFactory.getCurrentSession().createQuery("from Car where owner.id = :id").setParameter("id", personId).getResultList();
         for (Car car : list) {
@@ -67,11 +64,11 @@ public class PersonDaoImpl implements PersonDao {
         }
         return carSet;
     }
-    public boolean validRequestData(Person person){
+
+    private boolean validRequestData(Person person){
         if(person.getId()!= null
                 && !person.getId().toString().equals("")
                 &&  person.getName() != null
-                && !person.getName().equals("")
                 &&  person.getBirthdate() != null
                 && !person.getBirthdate().toString().equals("")) {
             return true;
