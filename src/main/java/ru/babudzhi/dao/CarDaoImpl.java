@@ -15,6 +15,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Repository
+@Transactional
 public class CarDaoImpl implements CarDao {
     @Autowired
     SessionFactory sessionFactory;

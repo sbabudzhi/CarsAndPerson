@@ -20,7 +20,8 @@ public class Car {
         this.owner = owner;
     }
 
-    public Car(String model, Integer horsePower, Person owner) {
+    public Car(Long id, String model, Integer horsePower, Person owner) {
+        this.id = id;
         this.model = model;
         this.horsePower = horsePower;
         this.owner = owner;

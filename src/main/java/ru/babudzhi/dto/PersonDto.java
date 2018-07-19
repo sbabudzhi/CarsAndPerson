@@ -9,8 +9,9 @@ public class PersonDto {
     private Set<CarDto> carDtoSet;
 
     public PersonDto() { }
-    public PersonDto(Long id) {
-        this.id = id;
+    public PersonDto( String name, String birthday) {
+        this.name = name;
+        this.birthdate = birthday;
     }
 
     public PersonDto(Long id, String name, String birthday) {
