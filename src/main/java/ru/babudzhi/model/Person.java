@@ -20,6 +20,11 @@ public class Person {
         this.birthdate = birthdate;
         this.carSet = carSet;
     }
+    public Person(Long id, String name, Date birthdate) {
+        this.id = id;
+        this.name = name;
+        this.birthdate = birthdate;
+    }
 
     public Person(Long id) {
        this.id = id;

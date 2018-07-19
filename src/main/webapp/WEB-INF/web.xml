@@ -5,7 +5,7 @@
   <display-name>Archetype Created Web Application</display-name>
   <context-param>
     <param-name>contextConfigLocation</param-name>
-    <param-value>/WEB-INF/dispatcher-servlet.xml</param-value>
+    <param-value>/src/main/resourses/dispatcher-servlet.xml</param-value>
   </context-param>
 
   <listener>

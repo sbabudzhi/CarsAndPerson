@@ -12,19 +12,20 @@ import java.util.List;
 import java.util.Set;
 
 @Repository
+@Transactional
 public class PersonDaoImpl implements PersonDao {
     @Autowired
     SessionFactory sessionFactory;
 
     @Override
     public Person addPerson(Person person) {
-        if(validRequestData(person)) {
-            List<Long> personIdList = sessionFactory.getCurrentSession().createQuery("select id from Person where id=:id").setParameter("id",person.getId()).getResultList();
+        if(validRequestData(person)&& sessionFactory.getCurrentSession()!=null) {
+            List<Long> personIdList =  sessionFactory.getCurrentSession().createQuery("select id from Person where id=:id").setParameter("id",person.getId()).getResultList();
             if(personIdList.size()!=0)
-                    return null;
+                  return null;
 
             if (person.getBirthdate().before(new Date())) { // дата в прошлом
-                this.sessionFactory.getCurrentSession().persist(person);
+                sessionFactory.getCurrentSession().persist(person);
                 return sessionFactory.getCurrentSession().load(Person.class, person.getId());
             }
         }

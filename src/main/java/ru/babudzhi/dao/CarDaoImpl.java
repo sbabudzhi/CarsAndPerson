@@ -21,7 +21,7 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public Car addCar(Car car) {
-        if (carNotExist(car.getId())
+        if (sessionFactory.getCurrentSession()!= null && carNotExist(car.getId())
                 && validRequest(car)) {
             sessionFactory.getCurrentSession().persist(car);
             return sessionFactory.getCurrentSession().load(Car.class, car.getId());

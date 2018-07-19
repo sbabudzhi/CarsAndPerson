@@ -33,7 +33,7 @@ public class CarServiceImpl implements CarService {
         return carDao.countVendor();
     }
 
-    public Car getCarOfCarDto(CarDto cDto){
+    private Car getCarOfCarDto(CarDto cDto){
 
         Car car =  new Car(cDto.getId(),cDto.getModel(),cDto.getHorsepower());
         if(cDto.getOwnerId() != null && !cDto.getOwnerId().toString().equals(""))
@@ -41,7 +41,7 @@ public class CarServiceImpl implements CarService {
         return car;
     }
 
-    public CarDto getCarDtoOfCar(Car car){
+    private CarDto getCarDtoOfCar(Car car){
         CarDto cDto = new CarDto();
         cDto.setId(car.getId());
         cDto.setModel(car.getModel());

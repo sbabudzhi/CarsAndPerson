@@ -44,7 +44,12 @@ public class PersonServiceImpl implements PersonService {
         return personDao.personCount();
     }
 
-    public PersonDto getPersonDtoOfPerson(Person p){
+    @Override
+    public void clear(){
+        personDao.clear();
+    }
+
+    private PersonDto getPersonDtoOfPerson(Person p){
         PersonDto personDto = new PersonDto(p.getId(),p.getName(),p.getBirthdate().toString());
 
         Set<CarDto> carDtoSetReturnable = new HashSet<>();
@@ -54,7 +59,7 @@ public class PersonServiceImpl implements PersonService {
         return personDto;
     }
 
-    public Person getPersonOfPersonDto( PersonDto pDto){
+    private Person getPersonOfPersonDto( PersonDto pDto){
 
         Person person = new Person(pDto.getId(), pDto.getName());
         if( pDto.getBirthdate()!= null && !pDto.getBirthdate().equals("")) {
@@ -74,7 +79,7 @@ public class PersonServiceImpl implements PersonService {
         return person;
     }
 
-    public PersonWithCars getPersonWithCarsOfPerson(Person p){
+    private PersonWithCars getPersonWithCarsOfPerson(Person p){
         PersonWithCars personWithCars = new PersonWithCars(p.getId(),p.getName(),p.getBirthdate());
 
         Set<CarDto> carDtoSetReturnable = new HashSet<>();
@@ -87,7 +92,7 @@ public class PersonServiceImpl implements PersonService {
         return personWithCars;
     }
 
-    public void getCarDtoSetOfCarSet(Set<Car> carSet, Set<CarDto> carDtoSetReturnable, Long idPerson) {
+    private void getCarDtoSetOfCarSet(Set<Car> carSet, Set<CarDto> carDtoSetReturnable, Long idPerson) {
         for (Car car : carSet) {
             CarDto carDto = new CarDto();
             carDto.setId(car.getId());
@@ -98,7 +103,7 @@ public class PersonServiceImpl implements PersonService {
         }
     }
 
-    public void getCarSetOfCarDtoSet( Set<CarDto> carDtoSet,Set<Car> carSetReturnable,Person person){
+    private void getCarSetOfCarDtoSet( Set<CarDto> carDtoSet,Set<Car> carSetReturnable,Person person){
         for (CarDto carDto : carDtoSet) {
             Car car = new Car();
             car.setId(carDto.getId());
@@ -107,11 +112,6 @@ public class PersonServiceImpl implements PersonService {
             car.setOwner(person);
             carSetReturnable.add(car);
         }
-    }
-
-    @Override
-    public void clear(){
-        personDao.clear();
     }
 }
 

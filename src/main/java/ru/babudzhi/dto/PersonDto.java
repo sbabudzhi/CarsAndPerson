@@ -13,7 +13,7 @@ public class PersonDto {
         this.id = id;
     }
 
-    public PersonDto(long id, String name, String birthday) {
+    public PersonDto(Long id, String name, String birthday) {
         this.id = id;
         this.name = name;
         this.birthdate = birthday;
@@ -41,5 +41,13 @@ public class PersonDto {
     }
     public void setBirthdate(String birthday) {
         this.birthdate = birthday;
+    }
+
+    public boolean equals(PersonDto personDto){
+        if(personDto.getId() == this.getId()
+                && personDto.getName().equals(this.name)
+                && personDto.getBirthdate().equals(this.birthdate))
+            return true;
+        return false;
     }
 }

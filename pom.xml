@@ -17,14 +17,20 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>1.7</maven.compiler.source>
     <maven.compiler.target>1.7</maven.compiler.target>
+    <systest.package>**/test/**</systest.package>
   </properties>
 
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>4.11</version>
+      <version>4.12</version>
       <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.12</version>
     </dependency>
     <dependency>
       <groupId>org.springframework</groupId>
@@ -55,6 +61,14 @@
       <artifactId>spring-orm</artifactId>
       <version>5.0.7.RELEASE</version>
     </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-test</artifactId>
+      <version>5.0.7.RELEASE</version>
+      <scope>test</scope>
+    </dependency>
+
 
     <dependency>
       <groupId>com.h2database</groupId>
@@ -109,12 +123,31 @@
       <artifactId>spring-data-jpa</artifactId>
       <version>2.0.8.RELEASE</version>
     </dependency>
+      <dependency>
+          <groupId>org.mockito</groupId>
+          <artifactId>mockito-core</artifactId>
+          <version>2.15.0</version>
+          <scope>test</scope>
+      </dependency>
   </dependencies>
 
   <build>
     <finalName>Cars</finalName>
     <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
       <plugins>
+
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>2.5</version>
+          <configuration>
+            <excludes>
+              <exclude>${systest.package}</exclude>
+              <exclude>**/*$*</exclude>
+            </excludes>
+          </configuration>
+        </plugin>
+
         <plugin>
           <artifactId>maven-clean-plugin</artifactId>
           <version>3.0.0</version>
@@ -155,6 +188,27 @@
           <target>8</target>
         </configuration>
       </plugin>
+
     </plugins>
   </build>
+  <profiles>
+    <profile>
+      <id>systest</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <version>2.5</version>
+            <configuration>
+              <excludes>
+                <exclude>**/*$*</exclude>
+              </excludes>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+
 </project>
